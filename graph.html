@@ -1,0 +1,120 @@
+<html>
+<head>
+		<link type="text/css" href="css/redmond/jquery-ui-1.8.7.custom.css" rel="stylesheet" />	
+		<script type="text/javascript" src="js/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="js/jquery-ui-1.8.7.custom.min.js"></script>
+		<!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    
+    <script type="text/javascript" src="jiracount.js"></script> 
+    <script type="text/javascript" src="pichart.js"></script>
+    <script type="text/javascript" src="annotated.js"></script> 
+    <script type="text/javascript" src="performance.js"></script>
+    <script type="text/javascript" src="bar.js"></script>     
+    
+		<script type="text/javascript">
+			$(function(){
+				$("#accordion").accordion({ header: "h3", autoHeight: false, changestart: function(event, ui) {
+				  getCurrentGraphTypeSelection(event);   
+				 }
+				});
+  		  $( "#radio" ).buttonset();
+       	$( "button").button();
+	    });
+
+      google.load("visualization", "1", {packages:["corechart", "annotatedtimeline", 'imagebarchart']});
+      
+ 
+	    var getCurrentGraphTypeSelection = function(event){
+	      //The Chart Data tab is clicked
+          var graph_types = {
+            'timeline': ['Jira Count', 'Sales', 'Access Logs'],
+            'pie': ['Jira Breakup for one Release'], 
+            'bar': ['Performance Rating', 'GoNoGo']
+          };
+           
+          for(var type in graph_types){
+            if(document.getElementById(type).checked){
+              var selected_graph_type = type;
+            }
+          }
+          var select = document.getElementById("drop_down")
+          select.options.length = 0;
+          for(var i=0; i<graph_types[selected_graph_type].length; i++){
+            select.options[i] = new Option(graph_types[selected_graph_type][i], graph_types[selected_graph_type][i]);
+          };
+	    }
+
+      function generate(){
+        var selection = document.getElementById("drop_down").value;
+        switch(selection){
+          case "Jira Count":
+            jiracount_initialize();
+            break;
+          case 'Jira Breakup for one Release':
+            gonogo_initialize();
+            break;
+          case 'Sales':
+            annotated_initialize();
+            break;
+          case 'Performance Rating':
+            perf_initialize();
+            break;
+          case 'GoNoGo':
+            bar_initialize();
+            break;
+        }
+      }         
+	    
+		</script>
+		<style type="text/css">
+			/*demo page css*/
+			body{ font: 62.5% "Trebuchet MS", sans-serif; margin: 50px;}
+			#chart_container{
+		    width: 67%;
+        position: absolute;
+        right: 1%;
+			}
+			#accordion {
+        width: 30%;
+        position: absolute;
+        left: 1%;
+        padding-top: 12px;
+			}
+			.ui-widget-content{text-align: center;}
+			.ui-buttonset{
+			  margin-right: 0px;
+			}
+			#gen {
+			  margin-top: 15px;
+			}
+		</style>
+</head>
+<body>
+		<div id="accordion">
+			<div>
+				<h3><a href="#">Chart Type</a></h3>
+					<div id="radio">
+		        <input type="radio" id="pie" name="radio" /><label for="pie">Pie</label>
+		        <input type="radio" id="timeline" name="radio" checked="timeline" /><label for="timeline">Timeline</label>
+		        <input type="radio" id="bar" name="radio" /><label for="bar">Bar</label>
+				  </div>
+			</div>
+			<div>
+				<h3><a href="#">Chart Data</a></h3>
+				 <!--Div that will hold the dropdown with the various chart titles-->
+        <div>
+          <div><select name="dropdown_list" id="drop_down"></select></div>
+          <div><button id="gen" onclick="javascript:generate();">Generate Graph</button></div>
+        </div>  
+			</div>
+		</div>
+		
+		<div id="chart_container" class="ui-widget">
+		  <h2 class="ui-widget-header">Chart</h2>
+ 				 <!--Div that will hold the pie chart-->
+        <div id='chart_div' style='width: 800px; height: 300px;'></div>
+		</div>
+
+</body>
+</html>
