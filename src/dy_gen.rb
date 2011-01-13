@@ -13,23 +13,27 @@ FasterCSV.open("data.csv", "w") do |csv|
   row.push('Date','Server1','Server2','Server3');
   csv << row
   
-  43830.times do
+  365.times do
     row = Array.new
     
-    row.push((t+incr).strftime("%Y%m%d %T"))
+    row.push((t+incr).strftime("%Y%m%d"))
   
+    #row.push((rand(10)).to_s() + ";" + (rand()*10000).to_s() + ";" + (rand(10)).to_s());
+    #row.push((rand(10)).to_s() + ";" + (rand()*10000).to_s() + ";" + (rand(10)).to_s());
+    #row.push((rand(10)).to_s() + ";" + (rand()*10000).to_s() + ";" + (rand(10)).to_s());
+
     row.push(rand()*10000)
-    row.push(rand()*10)
-  
+    #row.push(rand(10))  
+    
     row.push(rand()*10000)
-    row.push(rand()*10)
-  
+    #row.push(rand(10))
+#   
     row.push(rand()*10000)
-    row.push(rand()*10)
+    #row.push(rand(10))
     csv << row
   
     #puts row.join(",")
-    incr += 60
+    incr += 86400
   end
 
 end
